@@ -10,6 +10,10 @@ class typeId(Enum):
     reels = 2
     album = 8
 
+class Source(Enum):
+    media = 0
+    story = 1
+
 class instUser():
 
     def __init__(self, login: str, password: str):
@@ -19,7 +23,7 @@ class instUser():
 
 
 
-    def download_resources(self, resources, path):
+    def download_resources(self, resources, source: Source ,path: str):
         utils.create_folder(path + "/photo")
         utils.create_folder(path + "/feed")
         utils.create_folder(path + "/igtv")
@@ -29,12 +33,21 @@ class instUser():
         for resource in resources:
             if resource.media_type == typeId.photo.value:
                 self.client.photo_download(resource.pk, path + "/photo")
-            elif resource.media_type == typeId.video.video and resource.product_type == "feed":
-                self.client.video_download(resource.pk, path + "/feed")
-            elif resource.media_type == typeId.igtv.value and resource.product_type == "igtv":
-                self.client.video_download(resource.pk, path + "/igtv")
-            elif resource.media_type == typeId.reels.value and resource.product_type == "clips":
-                self.client.video_download(resource.pk, path + "/clips")
+            elif resource.media_type == typeId.video.value and resource.product_type == 'feed':
+                if source.value:
+                    self.client.video_download_from_story(resource.pk, path + "/feed")
+                else:
+                    self.client.video_download(resource.pk, path + "/feed")
+            elif resource.media_type == typeId.igtv.value and resource.product_type == 'igtv':
+                if source.value:
+                    self.client.video_download_from_story(resource.pk, path + "/igtv")
+                else:
+                    self.client.video_download(resource.pk, path + "/igtv")
+            elif resource.media_type == typeId.reels.value and resource.product_type == 'clips':
+                if source.value:
+                    self.client.video_download_from_story(resource.pk, path + "/clips")
+                else:
+                    self.client.video_download(resource.pk, path + "/clips")
             elif resource.media_type == typeId.album.value:
                 self.client.album_download(resource.pk, path + "/album")
 
@@ -46,7 +59,7 @@ class instUser():
         utils.create_folder(path + "/" + username)
         utils.create_folder(path + "/" + username + "/resources_from_main_page")
 
-        self.download_resources(medias, path + "/" + username + "/resources_from_main_page")
+        self.download_resources(medias, Source.media, path + "/" + username + "/resources_from_main_page")
 
     def download_resources_from_stories(self, username: str, path: str = os.getcwd()):
 
@@ -56,4 +69,4 @@ class instUser():
         utils.create_folder(path + "/" + username)
         utils.create_folder(path + "/" + username + "/resources_from_stories")
 
-        self.download_resources(stories, path + "/" + username + "/resources_from_stories")
+        self.download_resources(stories, Source.story, path + "/" + username + "/resources_from_stories")
