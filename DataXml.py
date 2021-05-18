@@ -53,10 +53,22 @@ class DataXml:
             raise Exception("Username " + username + " isn't found")
 
     def activate_user(self, username: str):
-        pass
+        for user in self.tree.getroot().findall('user'):
+            if user.attrib['username'] == username:
+                user.set("active", "true")
+                return True
+
+        else:
+            raise Exception("Username " + username + " isn't found")
 
     def deactivate_user(self, username: str):
-        pass
+        for user in self.tree.getroot().findall('user'):
+            if user.attrib['username'] == username:
+                user.set("active", "false")
+                return True
+
+        else:
+            raise Exception("Username " + username + " isn't found")
 
     def select_user(self, username: str):
         for user in self.tree.getroot().findall('user'):
@@ -76,8 +88,16 @@ class DataXml:
 
     #Methods for work with hashtags
 
-    def add_hashtag(self):
-        pass
+    def add_hashtag(self, hashtag: str, date_str: str):
+        new_hashtag = xml.Element("hashtag")
+        name = xml.Element("name")
+        name.text = hashtag
+        date = xml.Element("date")
+        date.text = date_str
+        new_hashtag.append(name)
+        new_hashtag.append(date)
+
+        self.root.find('hashtags').append(new_hashtag)
 
     def get_user_hashtags(self):
         if not self.current_user:
@@ -111,8 +131,16 @@ class DataXml:
 
     #Methods for work with friends
 
-    def add_friend(self):
-        pass
+    def add_friend(self, friend: str, date_str: str):
+        new_friend = xml.Element("friend")
+        name = xml.Element("name")
+        name.text = friend
+        date = xml.Element("date")
+        date.text = date_str
+        new_friend.append(name)
+        new_friend.append(date)
+
+        self.root.find('friends').append(new_friend)
 
     def get_user_friends(self):
         if not self.current_user:
@@ -145,17 +173,57 @@ class DataXml:
 
     #Methods for work with medias and stories
 
-    def check_story(self):
-        pass
+    def check_story(self, id_story: int):
+        for story in self.root.find("stories"):
+            if story.attrib['id'] == str(id_story):
+                return True
 
-    def add_story(self):
-        pass
+        return False
 
-    def check_media(self):
-        pass
+    def add_story(self, id_story: int, date_str: str, type_str: str, objects_array: []):
+        new_story = xml.Element("story", {"id": str(id_story)})
+        date = xml.Element("date")
+        date.text = date_str
+        type = xml.Element("type")
+        type.text = type_str
+        objects = xml.Element("objects")
+        for values in objects_array:
+            object = xml.Element("object", {"name": values[0]})
+            count = xml.Element("count")
+            count.text = str(values[1])
+            object.append(count)
+            objects.append(object)
 
-    def add_media(self):
-        pass
+        new_story.append(date)
+        new_story.append(type)
+        new_story.append(objects)
+        self.root.find("stories").append(new_story)
+
+    def check_media(self, id_media: int):
+        for media in self.root.find("medias"):
+            if media.attrib['id'] == str(id_media):
+                return True
+
+        return False
+
+    def add_media(self, id_media: int, date_str: str, type_str: str, objects_array: []):
+        new_media = xml.Element("story", {"id": str(id_media)})
+        date = xml.Element("date")
+        date.text = date_str
+        type = xml.Element("type")
+        type.text = type_str
+        objects = xml.Element("objects")
+        for values in objects_array:
+            object = xml.Element("object", {"name": values[0]})
+            count = xml.Element("count")
+            count.text = str(values[1])
+            object.append(count)
+            objects.append(object)
+
+        new_media.append(date)
+        new_media.append(type)
+        new_media.append(objects)
+        self.root.find("medias").append(new_media)
 
     def get_user_objects_with_resources(self):
         if not self.current_user:
