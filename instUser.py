@@ -31,6 +31,28 @@ class instUser():
         utils.create_folder(path + "/album")
 
         for resource in resources:
+            if source == Source.story and resource.mentions:
+                print()
+                print('New friend')
+                users = []
+                for usertag in resource.mentions:
+                    users.append((dict(dict(usertag).get('user'))['username']))
+                print(users)
+
+
+            if source == Source.media and resource.usertags:
+                print()
+                print('New friend')
+                users = []
+                for usertag in resource.usertags:
+                    users.append((dict(dict(usertag).get('user'))['username']))
+                print(users)
+
+            if source == Source.media:
+                print(self.get_hashtags_from_caption(resource.caption_text))
+
+
+
             if resource.media_type == typeId.photo.value:
                 self.client.photo_download(resource.pk, path + "/photo")
             elif resource.media_type == typeId.video.value and resource.product_type == 'feed':
@@ -57,7 +79,7 @@ class instUser():
         medias = self.client.user_medias(user_id)
 
         utils.create_folder(path + "/" + username)
-        utils.create_folder(path + "/" + username + "/resources_from_main_page")
+        utils.create_folder(path + "/" + username+ "/resources_from_main_page")
 
         self.download_resources(medias, Source.media, path + "/" + username + "/resources_from_main_page")
 
@@ -70,3 +92,20 @@ class instUser():
         utils.create_folder(path + "/" + username + "/resources_from_stories")
 
         self.download_resources(stories, Source.story, path + "/" + username + "/resources_from_stories")
+
+    def get_hashtags_from_caption(self, caption: str):
+        try:
+            hashtags = []
+            while caption.find("#"):
+                hashtag = ""
+                i = caption.index("#")
+                while len(caption) > (i + 1) and caption[i + 1] != " ":
+                    hashtag += caption[i + 1]
+                    i += 1
+
+                hashtags.append(hashtag)
+                caption = caption.replace("#", "", 1)
+        except Exception:
+            pass
+
+        return hashtags
