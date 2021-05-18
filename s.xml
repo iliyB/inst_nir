@@ -1,0 +1,79 @@
+<data>
+    <user username="s" active="true">
+        <hashtags>
+            <hashtag>
+                <name>#fg</name>
+                <date>2020-09-12</date>
+            </hashtag>
+            <hashtag>
+                <name>#fg</name>
+                <date>2021-05-15</date>
+            </hashtag>
+            <hashtag>
+                <name>#fg</name>
+                <date>2021-05-17</date>
+            </hashtag>
+            <hashtag>
+                <name>#fg</name>
+                <date>2021-05-01</date>
+            </hashtag>
+        </hashtags>
+
+        <friends>
+            <friend>
+                <username>AlexSouz</username>
+                <date>2021-05-01</date>
+            </friend>
+            <friend>
+                <username>AlexsSouz</username>
+                <date>2021-05-17</date>
+            </friend>
+        </friends>
+
+        <medias>
+            <media id="123871248324234">
+                <date>2021-05-17</date>
+                <type>Photo</type>
+                <objects>
+                    <object name="glass">
+                        <count>2</count>
+                    </object>
+                    <object name="dog">
+                        <count>1</count>
+                    </object>
+                </objects>
+            </media>
+        </medias>
+
+        <stories>
+            <story id="21312312412312">
+                <date>2021-05-01</date>
+                <type>Feed</type>
+                <objects>
+                    <object name="car">
+                        <count>7</count>
+                    </object>
+                    <object name="building">
+                        <count>2</count>
+                    </object>
+                    <object name="glass">
+                        <count>2</count>
+                    </object>
+                </objects>
+            </story>
+            <story id="123871248324234">
+                <date>2020-05-01</date>
+                <type>Photo</type>
+                <objects>
+                    <object name="glass">
+                        <count>2</count>
+                    </object>
+                    <object name="dog">
+                        <count>1</count>
+                    </object>
+                </objects>
+            </story>
+        </stories>
+
+    </user>
+</data>
