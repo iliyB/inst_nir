@@ -180,17 +180,17 @@ class DataXml:
 
         return False
 
-    def add_story(self, id_story: int, date_str: str, type_str: str, objects_array: []):
+    def add_story(self, id_story: int, date_str: str, type_str: str, objects_array: {}):
         new_story = xml.Element("story", {"id": str(id_story)})
         date = xml.Element("date")
         date.text = date_str
         type = xml.Element("type")
         type.text = type_str
         objects = xml.Element("objects")
-        for values in objects_array:
-            object = xml.Element("object", {"name": values[0]})
+        for key in objects_array.keys():
+            object = xml.Element("object", {"name": key})
             count = xml.Element("count")
-            count.text = str(values[1])
+            count.text = str(objects_array[key])
             object.append(count)
             objects.append(object)
 
@@ -206,17 +206,17 @@ class DataXml:
 
         return False
 
-    def add_media(self, id_media: int, date_str: str, type_str: str, objects_array: []):
-        new_media = xml.Element("story", {"id": str(id_media)})
+    def add_media(self, id_media: int, date_str: str, type_str: str, objects_array: {}):
+        new_media = xml.Element("media", {"id": str(id_media)})
         date = xml.Element("date")
         date.text = date_str
         type = xml.Element("type")
         type.text = type_str
         objects = xml.Element("objects")
-        for values in objects_array:
-            object = xml.Element("object", {"name": values[0]})
+        for key in objects_array.keys():
+            object = xml.Element("object", {"name": key})
             count = xml.Element("count")
-            count.text = str(values[1])
+            count.text = str(objects_array[key])
             object.append(count)
             objects.append(object)
 
