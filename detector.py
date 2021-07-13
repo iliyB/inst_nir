@@ -14,14 +14,11 @@ class detector_photo:
 
     def detectorRetinaNet_from_photo(self, input_file):
 
-        print()
-        print("RetinaNet")
         image, list = self.detector.detectObjectsFromImage(
             input_image=str(input_file),
             output_type="array",
             minimum_percentage_probability=45
         )
-        print("END RetinaNET")
         list_object = {}
         for object in list:
             if object['name'] in list_object:

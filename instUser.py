@@ -21,8 +21,8 @@ class instUser():
     def __init__(self, login: str, password: str):
         self.client = instagrapi.Client()
         self.client.login(login, password)
-        self.detector_photo = detector_photo()
         print("Login in is successful")
+        self.detector_photo = detector_photo()
 
     def check_resources(self, resources, source: Source, path_main: str, xml: DataXml):
         utils.create_folder(path_main + "/photo")
@@ -32,15 +32,17 @@ class instUser():
         utils.create_folder(path_main + "/album")
 
         for resource in resources:
-            print()
-            print()
-            print("new resource")
             if source == Source.story and xml.check_story(resource.pk):
-                print("Story is have")
+                #print("Story is have")
                 continue
             elif source == Source.media and xml.check_media(resource.pk):
-                print("Media is have")
+                #print("Media is have")
                 continue
+
+            if source == Source.story:
+                print("New story")
+            else:
+                print("New media")
 
             date = resource.taken_at.date()
             if source == Source.story and resource.mentions:
@@ -62,7 +64,6 @@ class instUser():
                     for user in users:
                         xml.add_friend(user, str(date))
 
-            print("Hashtags and friends")
 
             if source == Source.story:
                 if resource.media_type == typeId.photo.value:
@@ -79,12 +80,9 @@ class instUser():
 
                     if os.path.isfile(path_main + '/photo/' + file_name):
                         path = path_main + '/photo/' + file_name
-                        print("file is have")
                     else:
                         path = self.client.photo_download_from_story(resource.pk, path_main + "/photo")
-                        print("downloaded")
                     objects_ = self.detector_photo.detectorRetinaNet_from_photo(path)
-                    print("send objects")
                     for k in objects_.keys():
                         if k in objects:
                             objects[k] += objects_[k]
@@ -97,7 +95,7 @@ class instUser():
                 elif resource.media_type == typeId.reels.value and resource.product_type == 'clips':
                     path = self.client.video_download_from_story(resource.pk, path_main + "/clips")
 
-                print(objects)
+
                 xml.add_story(resource.pk, str(date), type, objects)
 
             elif source == Source.media:
@@ -115,12 +113,9 @@ class instUser():
 
                     if os.path.isfile(path_main + '/photo/' + file_name):
                         path = path_main + '/photo/' + file_name
-                        print("file is have")
                     else:
                         path = self.client.photo_download(resource.pk, path_main + "/photo")
-                        print("downloaded")
                     objects_ = self.detector_photo.detectorRetinaNet_from_photo(path)
-                    print("send objects")
                     for k in objects_.keys():
                         if k in objects:
                             objects[k] += objects_[k]
@@ -138,22 +133,21 @@ class instUser():
                     if os.path.isfile(path_main + '/album/' + file_name):
                         paths = []
                         for r in resource.resources:
-                            paths.append(path_main + '/album/' + "{username}_{story_pk}.jpg".format(
+                            if r.media_type == typeId.photo.value:
+                                paths.append(path_main + '/album/' + "{username}_{story_pk}.jpg".format(
                         username=xml.get_current_user(), story_pk=r.pk))
-                        print("album is have")
                     else:
                         paths = self.client.album_download(resource.pk, path_main + "/album")
-                        print("album downloaded")
                     for path in paths:
+                        if str(path).find(".mp4"):
+                            continue
                         objects_ = self.detector_photo.detectorRetinaNet_from_photo(path)
-                        print("send objects")
                         for k in objects_.keys():
                             if k in objects:
                                 objects[k] += objects_[k]
                             else:
                                 objects.update({k: objects_[k]})
 
-                print(objects)
                 xml.add_media(resource.pk, str(date), type, objects)
 
         xml.commit()
