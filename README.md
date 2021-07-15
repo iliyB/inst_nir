@@ -32,5 +32,6 @@ For use photo_download_from_story add a new method in "instagrapi/mixins/photo.p
         return self.photo_download_by_url(story.thumbnail_url, filename, folder)
       
 Add class login with fields: Login and Passwords
+
 Add database with format <name>.xml
 
